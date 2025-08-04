@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "httpS://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="purchaseMapper">
+
+  <!-- resultMap : PURCHASE 테이블 → Purchase VO 매핑 -->
+  <resultMap id="purchaseResult" type="com.kh.musicshop.purchase.vo.Purchase">
+    <id     property="purchaseNo"  column="PURCHASE_NO"    />
+    <result property="userId"      column="USER_ID"        />
+    <result property="musicNo"     column="MUSIC_NO"       />
+    <result property="price"       column="PRICE"          />
+    <result property="purchaseDate" column="PURCHASE_DATE" jdbcType="TIMESTAMP"/>
+  </resultMap>
+
+  <!-- 내 구매내역 조회 -->
+  <select id="selectUserPurchases" parameterType="string" resultMap="purchaseResult">
+    SELECT PURCHASE_NO,
+           USER_ID,
+           MUSIC_NO,
+           PRICE,
+           PURCHASE_DATE
+      FROM PURCHASE
+     WHERE USER_ID = #{userId}
+     ORDER BY PURCHASE_DATE DESC
+  </select>
+
+  <!-- 구매 처리 (INSERT) -->
+  <insert id="insertPurchase" parameterType="com.kh.musicshop.purchase.vo.Purchase">
+    INSERT INTO PURCHASE (
+      PURCHASE_NO,
+      USER_ID,
+      MUSIC_NO,
+      PURCHASE_DATE,
+      PRICE
+    ) VALUES (
+      SEQ_PURCHASE_NO.NEXTVAL,
+      #{userId},
+      #{musicNo},
+      SYSDATE,
+      #{price}
+    )
+  </insert>
+
+</mapper>

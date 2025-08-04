@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="boardMapper">  <!-- 이렇게 바꾸면 기존 코드 작동함 -->
+
+    <select id="listCount" resultType="int">
+        SELECT COUNT(*)
+        FROM BOARD
+        WHERE STATUS = 'Y'
+    </select>
+
+    <resultMap type="com.kh.musicshop.board.model.vo.Board" id="boardResultMap">
+        <result column="BOARD_NO" property="boardNo"/>
+        <result column="BOARD_TITLE" property="boardTitle"/>
+        <result column="BOARD_WRITER" property="boardWriter"/>
+        <result column="BOARD_CONTENT" property="boardContent"/>
+        <result column="ORIGIN_NAME" property="originName"/>
+        <result column="CHANGE_NAME" property="changeName"/>
+        <result column="COUNT" property="count"/>
+        <result column="CREATE_DATE" property="createDate"/>
+        <result column="STATUS" property="status"/>
+    </resultMap>
+
+    <select id="boardList" resultMap="boardResultMap">
+        SELECT BOARD_NO, BOARD_TITLE, BOARD_WRITER, ORIGIN_NAME, COUNT, CREATE_DATE
+        FROM BOARD
+        WHERE STATUS ='Y'
+        ORDER BY CREATE_DATE DESC
+    </select>
+
+    <update id="increaseCount" parameterType="int">
+        UPDATE BOARD
+        SET COUNT = COUNT + 1
+        WHERE BOARD_NO = #{bno}
+          AND STATUS = 'Y'
+    </update>
+
+    <select id="boardDetail" resultMap="boardResultMap">
+        SELECT BOARD_NO, BOARD_TITLE, BOARD_WRITER, BOARD_CONTENT,
+               CREATE_DATE, ORIGIN_NAME, CHANGE_NAME
+        FROM BOARD
+        WHERE BOARD_NO = #{bno}
+          AND STATUS = 'Y'
+    </select>
+
+   <insert id="insertBoard" parameterType="com.kh.musicshop.board.model.vo.Board">
+    INSERT INTO BOARD (
+        BOARD_NO, BOARD_TITLE, BOARD_WRITER,
+        BOARD_CONTENT, ORIGIN_NAME, CHANGE_NAME
+    ) VALUES (
+        SEQ_BNO.NEXTVAL,
+        #{boardTitle},
+        #{boardWriter},
+        #{boardContent},
+        #{originName, jdbcType=VARCHAR},
+        #{changeName, jdbcType=VARCHAR}
+    )
+</insert>
+
+    <delete id="deleteBoard" parameterType="int">
+        DELETE FROM BOARD
+        WHERE BOARD_NO = #{bno}
+    </delete>
+
+    <update id="updateBoard" parameterType="com.kh.musicshop.board.model.vo.Board">
+    UPDATE BOARD
+    SET BOARD_TITLE = #{boardTitle},
+        BOARD_CONTENT = #{boardContent},
+        ORIGIN_NAME = #{originName, jdbcType=VARCHAR},
+        CHANGE_NAME = #{changeName, jdbcType=VARCHAR}
+    WHERE BOARD_NO = #{boardNo}
+</update>
+
+    <select id="searchCount" resultType="int" parameterType="hashmap">
+        SELECT COUNT(*)
+        FROM BOARD
+        WHERE STATUS = 'Y'
+        <choose>
+            <when test="condition == 'writer'">
+                AND BOARD_WRITER 
+            </when>
+            <when test="condition == 'content'">
+                AND BOARD_CONTENT 
+            </when>
+            <otherwise>
+                AND BOARD_TITLE 
+            </otherwise>
+        </choose>
+        LIKE '%' || #{keyword} || '%'
+    </select>
+
+    <select id="searchList" resultMap="boardResultMap" parameterType="hashmap">
+        SELECT BOARD_NO, BOARD_TITLE, BOARD_WRITER, ORIGIN_NAME, COUNT, CREATE_DATE
+        FROM BOARD
+        WHERE STATUS = 'Y'
+        <choose>
+            <when test="condition == 'writer'">
+                AND BOARD_WRITER 
+            </when>
+            <when test="condition == 'content'">
+                AND BOARD_CONTENT 
+            </when>
+            <otherwise>
+                AND BOARD_TITLE 
+            </otherwise>
+        </choose>
+        LIKE '%' || #{keyword} || '%'
+        ORDER BY CREATE_DATE DESC
+    </select>
+
+</mapper>

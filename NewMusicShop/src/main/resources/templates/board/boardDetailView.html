@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>🎧 게시글 상세보기</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <style>
+        body {
+            background: #1e1e1e;
+            color: white;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        .content {
+            width: 70%;
+            margin: 100px auto;
+            background-color: #2a2a2a;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+        .table th {
+            background-color: transparent;
+            color: #ffca28;
+            font-weight: bold;
+        }
+        .btn {
+            border-radius: 30px;
+            font-weight: bold;
+        }
+        .btn-warning {
+            background-color: #ffca28;
+            color: black;
+            border: none;
+        }
+        .btn-warning:hover {
+            background-color: #ffc107;
+        }
+        .btn-danger {
+            background-color: #d32f2f;
+            border: none;
+        }
+        .btn-secondary {
+            border-radius: 30px;
+        }
+        .post-image {
+            display: block;
+            max-width: 100%;
+            max-height: 400px;
+            margin-top: 20px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- 공통 헤더 -->
+<div th:replace="fragments/header :: header"></div>
+
+<div class="content">
+    <h2 class="text-center mb-5">🎧 게시글 상세보기</h2>
+
+    <table class="table table-borderless text-white">
+        <tr>
+            <th>제목</th>
+            <td colspan="3" th:text="${b.boardTitle}">제목</td>
+        </tr>
+        <tr>
+            <th>작성자</th>
+            <td th:text="${b.boardWriter}">작성자</td>
+            <th>작성일</th>
+            <td th:text="${b.createDate}">작성일</td>
+        </tr>
+        <tr>
+            <th>첨부파일</th>
+            <td colspan="3">
+                <div th:if="${#strings.isEmpty(b.originName)}">첨부파일 없음</div>
+                <div th:if="${!#strings.isEmpty(b.originName)}">
+                    <a th:href="${b.changeName}" 
+                       th:download="${b.originName}" 
+                       style="color: #ffc107;" 
+                       th:text="${b.originName}">파일명</a>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <th>내용</th>
+            <td colspan="3">
+                <p style="white-space: pre-line;" th:text="${b.boardContent}">내용</p>
+
+                <!-- 이미지 미리보기 -->
+                <div th:if="${!#strings.isEmpty(b.originName)}">
+                    <img th:if="${isImage}" 
+                         th:src="@{${b.changeName}}" 
+                         class="post-image" alt="첨부 이미지"/>
+                </div>
+            </td>
+        </tr>
+    </table>
+
+    <!-- 수정/삭제 버튼 (작성자만 보이도록) -->
+    <div class="text-center mt-4" th:if="${loginUser != null and b.boardWriter == loginUser.userId}">
+        <a th:href="@{/update.bo(bno=${b.boardNo})}" class="btn btn-warning">수정하기</a>
+
+        <!-- 삭제 form -->
+        <form th:action="@{/delete.bo}" method="post" style="display:inline;">
+            <input type="hidden" name="bno" th:value="${b.boardNo}" />
+            <input type="hidden" name="filePath" th:value="${b.changeName}" />
+            <button type="submit" class="btn btn-danger"
+                    onclick="return confirm('정말로 삭제하시겠습니까?');">삭제하기</button>
+        </form>
+    </div>
+
+    <div class="text-center mt-3">
+        <a th:href="@{/list.bo}" class="btn btn-secondary">목록으로</a>
+    </div>
+</div>
+
+<!-- 공통 푸터 -->
+<div th:replace="fragments/footer :: footer"></div>
+
+</body>
+</html>

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>⭐ 회원가입 Star Form ⭐</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <style>
+    body {
+      background: url('https://media.giphy.com/media/3o6ZsXBmD78A7O59XW/giphy.gif') no-repeat center center fixed;
+      background-size: cover;
+      color: white;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    .content {
+      width: 70%;
+      margin: 50px auto;
+    }
+    .innerOuter {
+      border: 3px dashed gold;
+      padding: 5% 10%;
+      background-color: rgba(0, 0, 0, 0.6);
+      border-radius: 20px;
+      box-shadow: 0 0 20px gold;
+    }
+    label {
+      color: gold;
+      font-weight: bold;
+    }
+    .form-control {
+      background-color: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      border: 1px solid gold;
+      border-radius: 10px;
+      padding: 10px;
+      margin-bottom: 15px;
+    }
+    .btns button {
+      font-size: 1.1rem;
+      padding: 10px 25px;
+      border: none;
+      margin: 10px;
+    }
+    .btn-primary {
+      background: linear-gradient(to right, gold, #fff8dc);
+      color: black;
+      border-radius: 30px;
+      position: relative;
+    }
+    .btn-primary::after {
+      content: "⭐";
+      position: absolute;
+      top: -10px;
+      right: -15px;
+      font-size: 1.5rem;
+    }
+    .btn-danger {
+      background: #b71c1c;
+      color: white;
+      border-radius: 30px;
+    }
+    h2 {
+      text-align: center;
+      color: #ffd700;
+      font-family: 'East Sea Dokdo', cursive;
+      font-size: 2.5rem;
+    }
+  </style>
+</head>
+<body>
+
+<!-- 공통 헤더 -->
+<div th:replace="fragments/header :: header"></div>
+
+<div class="content">
+  <div class="innerOuter">
+    <h2>⭐ 회원가입</h2>
+    <form th:action="@{/insert.me}" method="post">
+      <div class="form-group">
+
+        <div>
+          <label for="insertUserId"><i class="fa-solid fa-star"></i> ID :</label>
+          <input type="text" class="form-control" id="insertUserId" placeholder="Enter ID" name="userId" required>
+          <div id="resultDiv" style="font-size:0.9em; display:none"></div>
+        </div>
+
+        <div>
+          <label for="insertUserPwd"><i class="fa-solid fa-star"></i> Password :</label>
+          <input type="password" class="form-control" id="insertUserPwd" placeholder="Enter Password" name="userPwd" required>
+        </div>
+
+        <div>
+          <label for="checkPwd"><i class="fa-solid fa-star"></i> Password Check :</label>
+          <input type="password" class="form-control" id="checkPwd" placeholder="Confirm Password" required>
+          <div id="pwdMsg" style="font-size:0.9em; margin-top:5px; display:none;"></div>
+        </div>
+
+        <div>
+          <label for="userName"><i class="fa-solid fa-star"></i> Name :</label>
+          <input type="text" class="form-control" id="userName" placeholder="Enter Name" name="userName" required>
+        </div>
+
+        <div style="display: flex; gap: 10px;">
+          <div style="flex: 1;">
+            <label for="age">Age :</label>
+            <input type="number" class="form-control" id="age" placeholder="Enter Age" name="age">
+          </div>
+          <div style="flex: 1;">
+            <label for="email">Email :</label>
+            <input type="text" class="form-control" id="email" placeholder="Enter Email" name="email">
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 10px; margin-top: 10px;">
+          <div style="flex: 1;">
+            <label for="phone">Phone :</label>
+            <input type="tel" class="form-control" id="phone" placeholder="Enter Phone (no '-')" name="phone">
+          </div>
+          <div style="flex: 1;">
+            <label for="address">Address :</label>
+            <input type="text" class="form-control" id="address" placeholder="Enter Address" name="address">
+          </div>
+        </div>
+
+        <div style="margin-top: 10px;">
+          <label>Gender :</label><br>
+          <input type="radio" id="Male" value="M" name="gender" checked>
+          <label for="Male">남자</label> &nbsp;&nbsp;
+          <input type="radio" id="Female" value="F" name="gender">
+          <label for="Female">여자</label>
+        </div>
+
+      </div>
+      <div class="btns" align="center">
+        <button type="submit" class="btn btn-primary" disabled>회원가입</button>
+        <button type="reset" class="btn btn-danger">초기화</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+$(function(){
+
+  const inputId = $("#insertUserId");
+  const pwd = $("#insertUserPwd");
+  const checkPwd = $("#checkPwd");
+  const submitBtn = $(".btns button[type=submit]");
+  const pwdMsg = $("#pwdMsg");
+
+  // ID 중복 확인
+  inputId.keyup(function(){
+    if(inputId.val().length > 4){
+      $.ajax({
+        url: "/idCheck.me",
+        data: { userId: inputId.val() },
+        success: function(result){
+          if(result === "NNNNN"){
+            $("#resultDiv").show().css("color","red").text("사용 불가능한 아이디 입니다.");
+            submitBtn.prop("disabled", true);
+          } else {
+            $("#resultDiv").show().css("color","lightgreen").text("사용 가능한 아이디 입니다.");
+            if(pwd.val() === checkPwd.val() && pwd.val() !== "") {
+              submitBtn.prop("disabled", false);
+            }
+          }
+        },
+        error: function(){ console.log("통신 실패"); }
+      });
+    } else {
+      $("#resultDiv").hide();
+      submitBtn.prop("disabled", true);
+    }
+  });
+
+  // 비밀번호 확인
+  checkPwd.on("keyup", function(){
+    if(pwd.val() === "" && checkPwd.val() === "") {
+      checkPwd.css("border", "");
+      pwdMsg.hide();
+      submitBtn.prop("disabled", true);
+    } else if(pwd.val() === checkPwd.val()) {
+      checkPwd.css("border", "2px solid lightgreen");
+      pwdMsg.show().css("color", "lightgreen").text("✅ 비밀번호가 일치합니다.");
+      if($("#resultDiv").text().includes("가능")) {
+        submitBtn.prop("disabled", false);
+      }
+    } else {
+      checkPwd.css("border", "2px solid red");
+      pwdMsg.show().css("color", "red").text("❌ 비밀번호가 일치하지 않습니다.");
+      submitBtn.prop("disabled", true);
+    }
+  });
+  
+  // 폼 리셋 시 안내 초기화
+  $("form").on("reset", function(){
+    $("#resultDiv").hide().text("");
+    $("#pwdMsg").hide().text("");
+    $("#checkPwd").css("border", "");
+    submitBtn.prop("disabled", true);
+  });
+  
+
+});
+</script>
+
+<!-- 공통 푸터 -->
+<div th:replace="fragments/footer :: footer"></div>
+
+</body>
+</html>

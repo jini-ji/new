@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>에러 페이지</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(to right, #1f4037, #99f2c8);
+        }
+
+        .error-container {
+            margin-top: 40px;
+            text-align: center;
+        }
+
+        .bubble-box {
+            position: relative;
+            margin: 80px auto;
+            padding: 30px 40px;
+            max-width: 400px;
+            background: white;
+            border-radius: 25px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        .bubble-box::after {
+            content: "";
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 20px 20px 0;
+            border-style: solid;
+            border-color: white transparent transparent transparent;
+        }
+
+        .bubble-text {
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: #333;
+            text-align: center;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+    </style>
+</head>
+<body>
+
+<!-- 공통 헤더 -->
+<div th:replace="fragments/header :: header"></div>
+<div class="error-container">
+    <div class="bubble-box">
+        <p class="bubble-text" th:text="${errorMsg}">에러가 발생했습니다.</p>
+    </div>
+</div>
+
+<!-- 공통 푸터 -->
+<div th:replace="fragments/footer :: footer"></div>
+
+</body>
+</html>

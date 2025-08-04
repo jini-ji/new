@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>🎧 게시글 작성</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #1c1c1c;
+            color: white;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        .content {
+            width: 70%;
+            margin: 100px auto;
+            background-color: #2c2c2c;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+        label {
+            font-weight: bold;
+            color: #ffca28;
+        }
+        .form-control, .form-control-file {
+            background-color: #3c3c3c;
+            color: white;
+            border: 1px solid #555;
+        }
+        .btn-primary {
+            background-color: #ffca28;
+            color: black;
+            border: none;
+            font-weight: bold;
+            border-radius: 25px;
+            padding: 10px 25px;
+        }
+        .btn-primary:hover {
+            background-color: #ffc107;
+        }
+        .btn-danger {
+            border-radius: 25px;
+            padding: 10px 25px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- ✅ 공통 헤더 -->
+<div th:replace="fragments/header :: header"></div>
+
+<div class="content">
+    <h2 class="text-center mb-5">🎧 게시글 작성하기</h2>
+
+    <form th:action="@{/insert.bo}" method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="title">제목</label>
+            <input type="text" class="form-control" id="title" name="boardTitle" required>
+        </div>
+
+        <!-- ❌ 작성자 필드 제거함 (서버에서 처리됨) -->
+
+        <div class="form-group">
+            <label for="upfile">첨부파일</label>
+            <input type="file" class="form-control-file" id="upfile" name="uploadFile">
+        </div>
+
+        <div class="form-group">
+            <label for="content">내용</label>
+            <textarea class="form-control" rows="10" name="boardContent" id="content" required></textarea>
+        </div>
+
+        <div class="text-center mt-4">
+            <button type="submit" class="btn btn-primary">등록하기</button>
+            
+            
+             <!-- ❌ 기존 reset → ✅ 목록 페이지로 이동 -->
+    <button type="button" class="btn btn-danger" onclick="location.href='/list.bo'">취소하기</button>
+</div>
+
+
+        </div>
+    </form>
+</div>
+
+<!-- ✅ 공통 푸터 -->
+<div th:replace="fragments/footer :: footer"></div>
+
+</body>
+</html>

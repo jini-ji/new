@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>⚠️ 접근 제한 ⚠️</title>
+    <style>
+        body {
+            background: linear-gradient(to right, #1f1c2c, #928dab);
+            font-family: 'Segoe UI', sans-serif;
+            color: white;
+            text-align: center;
+            padding: 100px 20px;
+        }
+        h2 {
+            font-size: 2.5rem;
+            color: #ffd700;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+        }
+        p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+        }
+        a {
+            display: inline-block;
+            padding: 12px 25px;
+            background: #ff9800;
+            color: black;
+            font-weight: bold;
+            border-radius: 30px;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+        a:hover {
+            background: #ffc107;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <h2>🚫 ACCESS DENIED 🚫</h2>
+    <p>죄송합니다.<br><strong>VIP 멤버</strong>만 접근 가능한 페이지입니다.</p>
+    <a th:href="@{/list.mu}">🎶 음원 목록으로 돌아가기</a>
+</body>
+</html>

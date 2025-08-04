@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>🎧 게시글 수정</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #121212;
+            color: white;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        .content {
+            width: 70%;
+            margin: 100px auto;
+            background-color: #2b2b2b;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+        label {
+            font-weight: bold;
+            color: #ffca28;
+        }
+        .form-control, .form-control-file {
+            background-color: #3a3a3a;
+            color: white;
+            border: 1px solid #555;
+        }
+        .btn-primary {
+            background-color: #ffca28;
+            color: black;
+            border: none;
+            font-weight: bold;
+            border-radius: 25px;
+            padding: 10px 25px;
+        }
+        .btn-primary:hover {
+            background-color: #ffc107;
+        }
+        .btn-danger {
+            border-radius: 25px;
+            padding: 10px 25px;
+        }
+        a.download-link {
+            color: #90caf9;
+        }
+    </style>
+</head>
+<body>
+
+<!-- 공통 헤더 -->
+<div th:replace="fragments/header :: header"></div>
+
+<div class="content">
+    <h2 class="text-center mb-5">🎧 게시글 수정</h2>
+
+    <form method="post" th:action="@{/update.bo}" enctype="multipart/form-data">
+        <input type="hidden" name="boardNo" th:value="${b.boardNo}">
+        <input type="hidden" name="changeName" th:value="${b.changeName}">
+
+        <div class="form-group">
+            <label for="title">제목</label>
+            <input type="text" class="form-control" id="title" name="boardTitle"
+                   th:value="${b.boardTitle}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="writer">작성자</label>
+            <input type="text" class="form-control" id="writer" name="boardWriter"
+                   th:value="${b.boardWriter}" readonly>
+        </div>
+
+        <div class="form-group">
+            <label for="upfile">새 첨부파일</label>
+            <input type="file" class="form-control-file" id="upfile" name="reUploadFile">
+            <p class="mt-2" th:if="${b.originName != null}">
+                현재 파일:
+                <a th:href="@{${b.changeName}}" th:download="${b.originName}" class="download-link" th:text="${b.originName}">파일명</a>
+            </p>
+        </div>
+
+        <div class="form-group">
+            <label for="content">내용</label>
+            <textarea class="form-control" rows="10" name="boardContent" id="content"
+                      required th:text="${b.boardContent}"></textarea>
+        </div>
+
+        <div class="text-center mt-4">
+            <button type="submit" class="btn btn-primary">수정하기</button>
+            <button type="button" class="btn btn-danger" onclick="location.href='/list.bo'">취소하기</button>
+        </div>
+    </form>
+</div>
+
+<!-- 공통 푸터 -->
+<div th:replace="fragments/footer :: footer"></div>
+
+</body>
+</html>

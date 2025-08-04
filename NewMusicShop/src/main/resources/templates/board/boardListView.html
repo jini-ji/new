@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>🎧 NewMusic 게시판</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background: url("https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4") no-repeat center center fixed;
+            background-size: cover;
+            font-family: 'Segoe UI', sans-serif;
+            color: white;
+        }
+        .container {
+            padding-top: 1px;
+        }
+        .board-card {
+            width: 80%;
+            margin: 0 auto 20px;
+            background-color: rgba(0, 0, 0, 0.7);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            color: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            transition: 0.3s;
+        }
+        .board-card:hover {
+            transform: translateY(-5px);
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+        .board-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        .board-info {
+            font-size: 0.9rem;
+            color: #ccc;
+        }
+        .write-btn {
+            background-color: #ffc107;
+            border: none;
+            border-radius: 25px;
+            padding: 10px 25px;
+            font-weight: bold;
+            color: black;
+            float: right;
+        }
+        .write-btn:hover {
+            background-color: #ff9800;
+            color: white;
+        }
+        .pagination {
+            justify-content: center;
+        }
+        
+        
+        
+        .modal-dialog.custom-login-size {
+    max-width: 350px;  /* 기존 대비 약 30% 축소 */
+  }
+        
+        
+        
+    </style>
+</head>
+<body>
+
+<!-- 공통 헤더 -->
+<div th:replace="fragments/header :: header"></div>
+
+<div class="container">
+    <h2 class="text-center mb-5">🎧 NewMusic 자유 게시판</h2>
+
+    <div class="mb-4" th:if="${session.loginUser != null}">
+    <a th:href="@{/insert.bo}" class="btn write-btn" style="color: white;">글쓰기</a>
+</div>
+
+    <div th:each="b : ${list}" class="board-card" 
+     th:onclick="'location.href=\'/detail.bo?bno=' + ${b.boardNo} + '\''"
+     style="cursor: pointer;">
+     
+    <div class="board-title" th:text="${b.boardTitle}">제목</div>
+    
+    <div class="board-info">
+        작성자: <span th:text="${b.boardWriter}">작성자</span> &nbsp; | &nbsp;
+        작성일: <span th:text="${b.createDate}">날짜</span> &nbsp; | &nbsp;
+        조회수: <span th:text="${b.count}">0</span>
+    </div>
+</div>
+
+    <div class="mt-4">
+        <ul class="pagination">
+            <li th:each="p : ${#numbers.sequence(pi.startPage, pi.endPage)}"
+                th:classappend="${p == pi.currentPage} ? 'active'">
+                <a class="page-link" th:href="@{/list.bo(currentPage=${p})}" th:text="${p}">1</a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+ <!-- ✅ 로그인 모달: 너비 축소 적용 -->
+
+
+<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered custom-login-size" role="document">
+    <div class="modal-content" style="background-color: #1a1f36; color: white; border-radius: 15px;">
+      
+      <div class="modal-header border-0">
+        <h5 class="modal-title" id="loginModalLabel">🔐 로그인</h5>
+        <button type="button" class="close text-light" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <form th:action="@{/login.me}" method="post">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="userId">아이디</label>
+            <input type="text" name="userId" class="form-control" placeholder="ID 입력" required>
+          </div>
+          <div class="form-group">
+            <label for="userPwd">비밀번호</label>
+            <input type="password" name="userPwd" class="form-control" placeholder="Password 입력" required>
+          </div>
+        </div>
+        <div class="modal-footer border-0 justify-content-center">
+          <button type="submit" class="btn btn-custom modify">로그인</button>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>
+
+  <!-- ✅ 부트스트랩 스크립트 -->
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+
+
+
+<!-- 공통 푸터 -->
+<div th:replace="fragments/footer :: footer"></div>
+
+</body>
+</html>

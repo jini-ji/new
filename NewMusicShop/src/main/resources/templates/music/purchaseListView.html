@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>내 구매내역</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    body, h2, th, td {
+      color: yellow !important;
+    }
+    .table {
+      background-color: #333;
+    }
+    body {
+      background-color: #111;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 공통 헤더 -->
+<div th:replace="fragments/header :: header"></div>
+
+  <div class="container mt-5">
+    <h2 class="mb-4">내 구매내역</h2>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>구매번호</th>
+          <th>트랙번호</th>
+          <th>가격(₩)</th>
+          <th>구매일시</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="p : ${list}">
+          <td th:text="${p.purchaseNo}">1</td>
+          <td th:text="${p.musicNo}">101</td>
+          <td th:text="${p.price}">1000</td>
+          <td th:text="${#dates.format(p.purchaseDate, 'yyyy-MM-dd HH:mm:ss')}">2025-07-03</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+<!-- 공통 푸터 -->
+<div th:replace="fragments/footer :: footer"></div>
+
+</body>
+</html>

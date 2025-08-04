@@ -1,0 +1,29 @@
+<header class="top-bar text-white">
+  <div class="container py-3">
+    
+    <!-- 첫 줄: 로고 + 기본 메뉴 -->
+    <div class="d-flex justify-content-between align-items-center flex-wrap mb-2">
+      <h1 class="m-0" style="font-size: 2rem;">🎵 NewMusicShop</h1>
+      <div class="d-flex gap-3">
+        <a th:href="@{/}" class="nav-link text-white">홈</a>
+        <a th:href="@{/list.bo}" class="nav-link text-white">게시판</a>
+      </div>
+    </div>
+
+    <!-- 두 번째 줄: 로그인 / 유저 메뉴 -->
+    <div class="d-flex justify-content-end align-items-center flex-wrap gap-2">
+      <span th:if="${session.loginUser == null}">
+        <a th:href="@{/insert.me}" class="nav-link text-white">회원가입</a>
+        <a href="#" class="nav-link text-white" data-toggle="modal" data-target="#loginModal">로그인</a>
+      </span>
+
+      <span th:if="${session.loginUser != null}" class="d-flex align-items-center gap-2 flex-wrap">
+        <span th:text="${session.loginUser.userName + '님 🎧'}"></span>
+        <a th:href="@{/mypage.me}" class="nav-link text-white">마이페이지</a>
+        <a th:href="@{/logout.me}" class="nav-link text-white">로그아웃</a>
+        <a th:href="@{/vipPage}" class="btn btn-warning btn-sm">💎 VIP</a>
+      </span>
+    </div>
+
+  </div>
+</header>
